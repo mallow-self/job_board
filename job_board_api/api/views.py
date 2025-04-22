@@ -29,7 +29,7 @@ class UserRegisterView(generics.CreateAPIView):
         response = super().create(request, *args, **kwargs)
         user = User.objects.get(email=response.data["email"])
         token, created = Token.objects.get_or_create(user=user)
-        return Response({"token": token.key, "user": UserSerializer(user).data})
+        return Response({"token": token.key, "user": UserSerializer(user).data},status=status.HTTP_201_CREATED)
 
 
 class UserUpdateView(generics.UpdateAPIView):
