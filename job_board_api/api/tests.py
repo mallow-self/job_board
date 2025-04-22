@@ -28,11 +28,43 @@ class UserProfileTestCase(APITestCase):
             "skills": "python",
         }
 
+        # employee user
+        self.employee_user = User.objects.create_user(
+            full_name="Alice Employer",
+            email="alice@e1xample.com",
+            password="strongpass123",
+            user_type="employer",
+            phone_number="1234567890",
+            company="OpenAI Corp",
+        )
+
+        # login with emp credentials
+        body = {"username": "alice@e1xample.com", "password": "strongpass123"}
+
+        response = self.client.post(reverse("login"), body, format="json")
+
+        self.access_emp = response.data.get("token")
+
+        # job seek user
+        self.user = User.objects.create_user(
+            full_name="Aslam M",
+            email="aslam@example.com",
+            password="strongpass12323",
+            user_type="job_seeker",
+            phone_number="1234677890",
+            company="OpenAI",
+        )
+
+        # login with user credentials
+        body = {"username": "aslam@example.com", "password": "strongpass12323"}
+
+        response = self.client.post(reverse("login"), body, format="json")
+
+        self.access_usr = response.data.get("token")
+
     def test_user_profile_creation_employee(self):
         # Send POST request to create the user
         response = self.client.post(self.url, self.employee_data, format="json")
-        print(response)
-
         # Assert the status code of the response (201 Created is the expected result)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -62,3 +94,19 @@ class UserProfileTestCase(APITestCase):
         # Check if the response contains validation errors for missing fields
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("email", response.data)
+
+    def test_create_job_listing_as_employer(self):
+        body = {
+            "title": "Backend Developer",
+            "description": "Develop APIs with Django",
+            "requirements": "3+ years experience",
+            "location": "Remote",
+            "salary": "5000",
+        }
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.access_emp)
+        response = self.client.post(
+            reverse("job-listings-list"),
+            body,
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data.get('title'), 'Backend Developer')
