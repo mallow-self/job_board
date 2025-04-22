@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from django.utils import timezone
 
 class UserManager(BaseUserManager):
     def create_user(self, email, full_name, password=None, user_type=None, **extra_fields):
@@ -90,3 +91,17 @@ class JobApplication(models.Model):
 
     def __str__(self):
         return f"{self.applicant.username} applied for {self.job.title}"
+
+
+class SavedJob(models.Model):
+    job = models.ForeignKey(
+        JobListing, on_delete=models.CASCADE, related_name="saved_by"
+    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="saved_jobs")
+    saved_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        unique_together = ["job", "user"]  # Prevent duplicate saves
+
+    def __str__(self):
+        return f"{self.user.username} saved {self.job.title}"

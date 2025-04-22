@@ -1,12 +1,13 @@
-from rest_framework import generics, permissions, viewsets, status
+from rest_framework import generics, permissions, viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-from .models import User, JobListing, JobApplication
-from .serializers import RegisterSerializer, UserSerializer, JobListingSerializer, JobApplicationSerializer
+from .models import User, JobListing, JobApplication, SavedJob
+from .serializers import RegisterSerializer, UserSerializer, JobListingSerializer, JobApplicationSerializer, SavedJobSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsEmployerAndOwnerOrReadOnly, IsJobSeeker
-
+from rest_framework.decorators import APIView
+from django_filters.rest_framework import DjangoFilterBackend
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -30,10 +31,12 @@ class JobListingViewSet(viewsets.ModelViewSet):
     queryset = JobListing.objects.all().order_by("-created_at")
     serializer_class = JobListingSerializer
     permission_classes = [IsAuthenticated, IsEmployerAndOwnerOrReadOnly]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ["location", "company_name"]
+    search_fields = ["title", "description", "requirements", "location", "company_name"]
 
     def perform_create(self, serializer):
         serializer.save(employer=self.request.user)
-
 
 
 class ApplyJobView(generics.CreateAPIView):
@@ -66,3 +69,28 @@ class AppliedJobsListView(generics.ListAPIView):
         return JobApplication.objects.filter(applicant=self.request.user).order_by(
             "-created_at"
         )
+
+
+class SaveJobView(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsJobSeeker]
+
+    def post(self, request, job_id):
+        try:
+            job = JobListing.objects.get(id=job_id)
+        except JobListing.DoesNotExist:
+            return Response({"detail": "Job not found."}, status=404)
+
+        if SavedJob.objects.filter(job=job, user=request.user).exists():
+            return Response({"detail": "Job already saved."}, status=400)
+
+        saved_job = SavedJob.objects.create(job=job, user=request.user)
+        serializer = SavedJobSerializer(saved_job)
+        return Response(serializer.data, status=201)
+
+
+class SavedJobListView(generics.ListAPIView):
+    serializer_class = SavedJobSerializer
+    permission_classes = [permissions.IsAuthenticated, IsJobSeeker]
+
+    def get_queryset(self):
+        return SavedJob.objects.filter(user=self.request.user).order_by("-saved_at")

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, JobListing, JobApplication
+from .models import User, JobListing, JobApplication, SavedJob
 from rest_framework.authtoken.models import Token
 
 class UserSerializer(serializers.ModelSerializer):
@@ -57,3 +57,12 @@ class JobApplicationSerializer(serializers.ModelSerializer):
         model = JobApplication
         fields = ['id', 'job', 'job_title', 'resume', 'cover_letter', 'status', 'created_at']
         read_only_fields = ['status', 'created_at', 'job_title']
+
+
+class SavedJobSerializer(serializers.ModelSerializer):
+    job_title = serializers.ReadOnlyField(source="job.title")
+    job_id = serializers.ReadOnlyField(source="job.id")
+
+    class Meta:
+        model = SavedJob
+        fields = ["id", "job_id", "job_title", "saved_at"]
