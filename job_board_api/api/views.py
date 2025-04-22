@@ -2,22 +2,31 @@ from rest_framework import generics, permissions, viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from .models import User, JobListing, JobApplication, SavedJob
-from .serializers import RegisterSerializer, UserSerializer, JobListingSerializer, JobApplicationSerializer, SavedJobSerializer
+from .serializers import UserProfileSerializer, UserSerializer, JobListingSerializer, JobApplicationSerializer, SavedJobSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsEmployerAndOwnerOrReadOnly, IsJobSeeker
 from rest_framework.decorators import APIView
 from django_filters.rest_framework import DjangoFilterBackend
 
-class RegisterView(generics.CreateAPIView):
+class UserRegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = RegisterSerializer
+    serializer_class = UserProfileSerializer
 
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
         user = User.objects.get(email=response.data["email"])
         token, created = Token.objects.get_or_create(user=user)
         return Response({"token": token.key, "user": UserSerializer(user).data})
+
+
+class UserUpdateView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return User.objects.filter(id=self.request.user.id)
 
 
 class CustomAuthToken(ObtainAuthToken):

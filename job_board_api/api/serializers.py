@@ -16,7 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
 
-class RegisterSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     class Meta:
@@ -41,6 +41,11 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
+
+    def update(self, instance, validated_data):
+        if "password" in validated_data:
+            instance.set_password(validated_data.pop("password"))
+        return super().update(instance, validated_data)
 
 
 class JobListingSerializer(serializers.ModelSerializer):
