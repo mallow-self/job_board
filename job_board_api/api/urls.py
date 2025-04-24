@@ -1,9 +1,10 @@
 from django.urls import path, include
 from .views import CustomAuthToken, JobListingViewSet, ApplyJobView, AppliedJobsListView, SaveJobView, SavedJobListView, UserRegisterView, UserUpdateView
-from rest_framework.routers import DefaultRouter
+# from rest_framework.routers import DefaultRouter
+from api.api_root import CustomRouter
 
-
-router = DefaultRouter()
+# router = DefaultRouter()
+router = CustomRouter()
 router.register(r"job-listings", JobListingViewSet, basename="job-listings")
 
 urlpatterns = [
