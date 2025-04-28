@@ -3,13 +3,23 @@ from api.models import JobListing
 
 
 class Command(BaseCommand):
-    help = "Changes the title of the snippet for the given id"
+    """
+    Custom Django management command to deactivate (close) a specific job posting.
+
+    This command sets the 'is_active' field of a JobListing instance to False,
+    preventing any further applications for that job.
+
+    Usage:
+        python manage.py close_job <job_id>
+    """
+
+    help = "Deactivate a job posting by setting its 'is_active' field to False."
 
     def add_arguments(self, parser):
         parser.add_argument("job_id", type=int)
 
     def handle(self, *args, **options):
-        id = options["job_id"]
+        id: int = options["job_id"]
         try:
             job = JobListing.objects.get(pk=id)
             job.is_active = False
