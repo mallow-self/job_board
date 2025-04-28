@@ -54,6 +54,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "api.middleware.RequestLoggingMiddleware",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -146,3 +147,41 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = "api.User"
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "[{asctime}] {levelname} {name} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname}: {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": { 
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+        "file": {  
+            "class": "logging.FileHandler",
+            "filename": "django_logs.log",  
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "django": {  
+            "handlers": ["console", "file"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "__main__": {  
+            "handlers": ["console", "file"],
+            "level": "INFO",
+        },
+        
+    },
+}

@@ -1,0 +1,26 @@
+[2025-04-28 04:47:49,436] INFO django.utils.autoreload Watching for file changes with StatReloader
+[2025-04-28 04:47:54,407] INFO django.server "GET /api/ HTTP/1.1" 200 6941
+[2025-04-28 04:47:54,652] WARNING django.request Not Found: /favicon.ico
+[2025-04-28 04:48:16,772] INFO django.server "GET /api/job-listings/ HTTP/1.1" 200 11428
+[2025-04-28 04:48:24,743] INFO django.server "GET /api/ HTTP/1.1" 200 6941
+[2025-04-28 04:48:27,640] WARNING django.request Method Not Allowed: /api/jobs/apply/1/
+[2025-04-28 04:48:27,641] WARNING django.server "GET /api/jobs/apply/1/ HTTP/1.1" 405 9561
+[2025-04-28 04:48:27,900] WARNING django.request Not Found: /favicon.ico
+[2025-04-28 04:48:37,951] INFO django.server "GET /api/ HTTP/1.1" 200 6941
+[2025-04-28 04:48:38,217] WARNING django.request Not Found: /favicon.ico
+[2025-04-28 04:48:42,384] WARNING django.request Not Found: /api/books/
+[2025-04-28 04:48:42,385] WARNING django.server "GET /api/books/ HTTP/1.1" 404 6596
+[2025-04-28 04:50:15,138] INFO django.utils.autoreload /home/rishicollinz/Documents/mallow/project/job_board/job_board_api/job_board_api/settings.py changed, reloading.
+[2025-04-28 04:50:15,568] INFO django.utils.autoreload Watching for file changes with StatReloader
+[2025-04-28 04:50:17,899] INFO django.utils.autoreload /home/rishicollinz/Documents/mallow/project/job_board/job_board_api/job_board_api/settings.py changed, reloading.
+[2025-04-28 04:50:18,337] INFO django.utils.autoreload Watching for file changes with StatReloader
+[2025-04-28 04:50:20,659] INFO django.utils.autoreload /home/rishicollinz/Documents/mallow/project/job_board/job_board_api/job_board_api/settings.py changed, reloading.
+[2025-04-28 04:50:21,112] INFO django.utils.autoreload Watching for file changes with StatReloader
+[2025-04-28 04:50:22,395] INFO django.utils.autoreload /home/rishicollinz/Documents/mallow/project/job_board/job_board_api/job_board_api/settings.py changed, reloading.
+[2025-04-28 04:50:22,798] INFO django.utils.autoreload Watching for file changes with StatReloader
+[2025-04-28 04:50:24,076] INFO django.utils.autoreload /home/rishicollinz/Documents/mallow/project/job_board/job_board_api/job_board_api/settings.py changed, reloading.
+[2025-04-28 04:50:24,521] INFO django.utils.autoreload Watching for file changes with StatReloader
+[2025-04-28 04:50:26,836] INFO django.utils.autoreload /home/rishicollinz/Documents/mallow/project/job_board/job_board_api/job_board_api/settings.py changed, reloading.
+[2025-04-28 04:50:27,308] INFO django.utils.autoreload Watching for file changes with StatReloader
+[2025-04-28 04:50:29,612] INFO django.utils.autoreload /home/rishicollinz/Documents/mallow/project/job_board/job_board_api/job_board_api/settings.py changed, reloading.
+[2025-04-28 04:50:30,010] INFO django.utils.autoreload Watching for file changes with StatReloader
